@@ -10,12 +10,13 @@ class FileServer(fs_pb2_grpc.FileServerServicer):
     def __init__(self):
         class Servicer(fs_pb2_grpc.FileServerServicer):
             filessaved = []
-            tmp_file_name = '/home/samkit/cmpe275/Output/'
-
+            tmp_file_name = ''
+            file_direc = '/home/samkit/cmpe275/Output/'
             def filename(self,req,context):
                 if req.fn:
                     self.filessaved.append(req.fn)
-                    self.tmp_file_name=self.tmp_file_name+req.fn
+                    self.tmp_file_name=''
+                    self.tmp_file_name=self.file_direc+req.fn
                 return fs_pb2.fs(fn="done")
             
             def upload(self, request_iterator, context):
