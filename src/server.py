@@ -8,13 +8,21 @@ import time
 
 class FileServer(fs_pb2_grpc.FileServerServicer):
     def __init__(self):
+
+        root = "/home/samkit/cmpe275/Output/"
+        filelist=[]
+        for path, subdirs, files in os.walk(root):
+            for name in files:
+                filelist.append(name)
+        
         class Servicer(fs_pb2_grpc.FileServerServicer):
-            filessaved = []
             tmp_file_name = ''
             file_direc = '/home/samkit/cmpe275/Output/'
+
             def filename(self,req,context):
+                print(filelist);
                 if req.fn:
-                    self.filessaved.append(req.fn)
+                    filelist.append(req.fn)
                     self.tmp_file_name=''
                     self.tmp_file_name=self.file_direc+req.fn
                 return fs_pb2.fs(fn="done")
@@ -24,10 +32,13 @@ class FileServer(fs_pb2_grpc.FileServerServicer):
                 return fs_pb2.Reply(length=os.path.getsize(self.tmp_file_name))
 
             def download(self, request, context):
-                if request.name and request.name in self.filessaved:
+                if request.name and request.name in filelist:
                     self.tmp_file_name='/home/samkit/cmpe275/Output/'+request.name
                     return helpers.get_file_chunks(self.tmp_file_name)
-
+                else:
+                     msg = 'File not Found'
+                     context.set_details(msg)
+                     context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
         self.server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
         fs_pb2_grpc.add_FileServerServicer_to_server(Servicer(), self.server)
 
@@ -42,5 +53,4 @@ class FileServer(fs_pb2_grpc.FileServerServicer):
             self.server.stop(0)
 
 a= FileServer()
-a.start(8888)
-
+a.start(8000)
