@@ -4,6 +4,10 @@ import grpc
 import fs_pb2 
 import fs_pb2_grpc
 import random
+from dotenv import load_dotenv
+import os
+
+load_dotenv();
 
 class client:
     def __init__(self, server):
@@ -29,15 +33,21 @@ class client:
         except grpc.RpcError as e:
             print(e.details())
             return False
+    def getServerStats(self):
+        try:
+            response = self.stub.getServerStats(fs_pb2.EMPTY())
+            return response
+        except grpc.RpcError as e:
+            print(e.details())
+            return "Server is down"
 try:
     while True:
-        option = input("press 1 to store file or 2 to search file ")
-        servers = ['localhost:8000','localhost:8001','localhost:8002','localhost:8003']
+        option = input("press 1 to store file, 2 to search file or 3 to get status\n")
+        servers = os.getenv("CLIENT_SERVER_LIST").split(',')
         selecttwo = random.sample(range(0, len(servers)), 2)
         conn=[]
         for server in servers:
             conn.append(client(server))
-        a = client('localhost:8000')
 
         if option=="1":
             in_file_name = input("Enter FilePath ")
@@ -45,19 +55,20 @@ try:
             print(fn)
             conn[selecttwo[0]].sendfile(in_file_name,fn)
             conn[selecttwo[1]].sendfile(in_file_name,fn)
-            # a.sendfile(in_file_name,fn)
-            # a1.sendfile(in_file_name,fn)
-        else:
+        elif option=="2":
             searchfile = input("Enter FileSearch ")
             check=True
             for connection in conn:
-                if connection.getfile(searchfile,"/home/samkit/cmpe275/Input/"+searchfile):
+                if connection.getfile(searchfile,os.getenv("CLIENT_FILE_OUTPUT")+searchfile):
                     print('file found!')
                     check=False
                     break
             if check: print('file not found!')
-            # if a.getfile(searchfile,"/home/samkit/cmpe275/Input/"+searchfile):
-            #     print('found s1')            
+        elif option=="3":
+            for index, connection in enumerate(conn):
+                status = connection.getServerStats()
+                print("\nStatus for server " + servers[index] + ":")
+                print(status)
 except KeyboardInterrupt:
         exit()
 

@@ -7,11 +7,15 @@ from concurrent import futures
 import time
 import psutil
 import shutil
+from dotenv import load_dotenv
+import os
+
+load_dotenv();
 
 class FileServer(fs_pb2_grpc.FileServerServicer):
     def __init__(self):
 
-        root = "/home/samkit/cmpe275/Output/"
+        root = os.getenv("SERVER_FILE_OUTPUT_PATH")
         filelist=[]
         for path, subdirs, files in os.walk(root):
             for name in files:
@@ -19,7 +23,7 @@ class FileServer(fs_pb2_grpc.FileServerServicer):
         
         class Servicer(fs_pb2_grpc.FileServerServicer):
             tmp_file_name = ''
-            file_direc = '/home/samkit/cmpe275/Output/'
+            file_direc = os.getenv("SERVER_FILE_OUTPUT_PATH")
 
             def filename(self,req,context):
                 print(filelist);
@@ -35,7 +39,7 @@ class FileServer(fs_pb2_grpc.FileServerServicer):
 
             def download(self, request, context):
                 if request.name and request.name in filelist:
-                    self.tmp_file_name='/home/samkit/cmpe275/Output/'+request.name
+                    self.tmp_file_name=os.getenv("SERVER_FILE_OUTPUT_PATH")+request.name
                     return helpers.get_file_chunks(self.tmp_file_name)
                 else:
                      msg = 'File not Found'
@@ -49,7 +53,7 @@ class FileServer(fs_pb2_grpc.FileServerServicer):
                 ram_available = str(ram_stats['available'])
                 ram_percent = str(ram_stats['percent'])
 
-                total_memory, used_memory, free_memory = shutil.disk_usage("/")
+                total_memory, used_memory, free_memory = shutil.disk_usage(os.getenv("SERVER_FILE_OUTPUT_PATH"))
 
                 return fs_pb2.stats(
                     cpuUtil = cpu_percent, ramTotal = str(ram_total),
