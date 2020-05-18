@@ -5,11 +5,17 @@ import fs_pb2
 import fs_pb2_grpc
 from concurrent import futures
 import time
+import psutil
+import shutil
+from dotenv import load_dotenv
+import os
+
+load_dotenv();
 
 class FileServer(fs_pb2_grpc.FileServerServicer):
     def __init__(self):
 
-        root = "/home/samkit/cmpe275/Output/"
+        root = os.getenv("SERVER_FILE_OUTPUT_PATH")
         filelist=[]
         for path, subdirs, files in os.walk(root):
             for name in files:
@@ -17,10 +23,9 @@ class FileServer(fs_pb2_grpc.FileServerServicer):
         
         class Servicer(fs_pb2_grpc.FileServerServicer):
             tmp_file_name = ''
-            file_direc = '/home/samkit/cmpe275/Output/'
+            file_direc = os.getenv("SERVER_FILE_OUTPUT_PATH")
 
             def filename(self,req,context):
-                print(filelist);
                 if req.fn:
                     filelist.append(req.fn)
                     self.tmp_file_name=''
@@ -33,12 +38,29 @@ class FileServer(fs_pb2_grpc.FileServerServicer):
 
             def download(self, request, context):
                 if request.name and request.name in filelist:
-                    self.tmp_file_name='/home/samkit/cmpe275/Output/'+request.name
+                    self.tmp_file_name=os.getenv("SERVER_FILE_OUTPUT_PATH")+request.name
                     return helpers.get_file_chunks(self.tmp_file_name)
                 else:
                      msg = 'File not Found'
                      context.set_details(msg)
                      context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            
+            def getServerStats(self, request, context):
+                cpu_percent = str(psutil.cpu_percent(percpu=False))
+                ram_stats = psutil.virtual_memory()._asdict()
+                ram_total = str(ram_stats['total'])
+                ram_available = str(ram_stats['available'])
+                ram_percent = str(ram_stats['percent'])
+
+                total_memory, used_memory, free_memory = shutil.disk_usage(os.getenv("SERVER_FILE_OUTPUT_PATH"))
+
+                return fs_pb2.stats(
+                    cpuUtil = cpu_percent, ramTotal = str(ram_total),
+                    ramAvailable = str(ram_available), ramPercent = str(ram_percent),
+                    totalMemory = str(total_memory), usedMemory = str(used_memory),
+                    freeMemory = str(free_memory)
+                )
+                
         self.server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
         fs_pb2_grpc.add_FileServerServicer_to_server(Servicer(), self.server)
 
@@ -52,5 +74,5 @@ class FileServer(fs_pb2_grpc.FileServerServicer):
         except KeyboardInterrupt:
             self.server.stop(0)
 
-a= FileServer()
+a = FileServer()
 a.start(8000)
