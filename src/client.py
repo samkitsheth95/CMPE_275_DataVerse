@@ -6,6 +6,7 @@ import fs_pb2_grpc
 import random
 from dotenv import load_dotenv
 import os
+from load_balancer import load_balancer
 
 load_dotenv();
 
@@ -44,7 +45,6 @@ try:
     while True:
         option = input("press 1 to store file, 2 to search file or 3 to get status\n")
         servers = os.getenv("CLIENT_SERVER_LIST").split(',')
-        selecttwo = random.sample(range(0, len(servers)), 2)
         conn=[]
         for server in servers:
             conn.append(client(server))
@@ -52,9 +52,10 @@ try:
         if option=="1":
             in_file_name = input("Enter FilePath ")
             fn = in_file_name.rsplit('/',1)[1]
+            serversList = load_balancer(conn)
             print(fn)
-            conn[selecttwo[0]].sendfile(in_file_name,fn)
-            conn[selecttwo[1]].sendfile(in_file_name,fn)
+            for connection in serversList:
+                connection[1].sendfile(in_file_name,fn)
         elif option=="2":
             searchfile = input("Enter FileSearch ")
             check=True

@@ -26,7 +26,6 @@ class FileServer(fs_pb2_grpc.FileServerServicer):
             file_direc = os.getenv("SERVER_FILE_OUTPUT_PATH")
 
             def filename(self,req,context):
-                print(filelist);
                 if req.fn:
                     filelist.append(req.fn)
                     self.tmp_file_name=''
