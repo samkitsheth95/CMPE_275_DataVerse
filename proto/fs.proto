@@ -5,6 +5,7 @@ service FileServer {
   rpc filename(fs) returns (fs) {}
   rpc upload(stream Chunk) returns (Reply) {}
   rpc download(Request) returns (stream Chunk) {}
+  rpc getServerStats(EMPTY) returns (stats) {}
 }
 
 message Chunk {
@@ -15,6 +16,16 @@ message fs {
   string fn = 1;
 }
 
+message stats {
+  string cpuUtil = 1;
+  string ramTotal = 2;
+  string ramAvailable = 3;
+  string ramPercent = 4;
+  string totalMemory = 5;
+  string usedMemory = 6;
+  string freeMemory = 7;
+}
+
 message Request {
   string name = 1;
 }
@@ -22,3 +33,5 @@ message Request {
 message Reply {
   int32 length = 1;
 }
+
+message EMPTY {}

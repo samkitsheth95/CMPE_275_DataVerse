@@ -5,6 +5,8 @@ import fs_pb2
 import fs_pb2_grpc
 from concurrent import futures
 import time
+import psutil
+import shutil
 
 class FileServer(fs_pb2_grpc.FileServerServicer):
     def __init__(self):
@@ -39,6 +41,23 @@ class FileServer(fs_pb2_grpc.FileServerServicer):
                      msg = 'File not Found'
                      context.set_details(msg)
                      context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            
+            def getServerStats(self, request, context):
+                cpu_percent = str(psutil.cpu_percent())
+                ram_stats = psutil.virtual_memory()._asdict()
+                ram_total = str(ram_stats['total'])
+                ram_available = str(ram_stats['available'])
+                ram_percent = str(ram_stats['percent'])
+
+                total_memory, used_memory, free_memory = shutil.disk_usage("/")
+
+                return fs_pb2.stats(
+                    cpuUtil = cpu_percent, ramTotal = str(ram_total),
+                    ramAvailable = str(ram_available), ramPercent = str(ram_percent),
+                    totalMemory = str(total_memory), usedMemory = str(used_memory),
+                    freeMemory = str(free_memory)
+                )
+                
         self.server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
         fs_pb2_grpc.add_FileServerServicer_to_server(Servicer(), self.server)
 
@@ -52,5 +71,5 @@ class FileServer(fs_pb2_grpc.FileServerServicer):
         except KeyboardInterrupt:
             self.server.stop(0)
 
-a= FileServer()
+a = FileServer()
 a.start(8000)

@@ -28,6 +28,11 @@ class FileServerStub(object):
                 request_serializer=fs__pb2.Request.SerializeToString,
                 response_deserializer=fs__pb2.Chunk.FromString,
                 )
+        self.getServerStats = channel.unary_unary(
+                '/FileServer/getServerStats',
+                request_serializer=fs__pb2.EMPTY.SerializeToString,
+                response_deserializer=fs__pb2.stats.FromString,
+                )
 
 
 class FileServerServicer(object):
@@ -51,6 +56,12 @@ class FileServerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def getServerStats(self, request, context):
+        """Missing associated documentation comment in .proto file"""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_FileServerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -68,6 +79,11 @@ def add_FileServerServicer_to_server(servicer, server):
                     servicer.download,
                     request_deserializer=fs__pb2.Request.FromString,
                     response_serializer=fs__pb2.Chunk.SerializeToString,
+            ),
+            'getServerStats': grpc.unary_unary_rpc_method_handler(
+                    servicer.getServerStats,
+                    request_deserializer=fs__pb2.EMPTY.FromString,
+                    response_serializer=fs__pb2.stats.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -124,5 +140,21 @@ class FileServer(object):
         return grpc.experimental.unary_stream(request, target, '/FileServer/download',
             fs__pb2.Request.SerializeToString,
             fs__pb2.Chunk.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getServerStats(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/FileServer/getServerStats',
+            fs__pb2.EMPTY.SerializeToString,
+            fs__pb2.stats.FromString,
             options, channel_credentials,
             call_credentials, compression, wait_for_ready, timeout, metadata)

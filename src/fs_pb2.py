@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n\x08\x66s.proto\"\x17\n\x05\x43hunk\x12\x0e\n\x06\x62uffer\x18\x01 \x01(\x0c\"\x10\n\x02\x66s\x12\n\n\x02\x66n\x18\x01 \x01(\t\"\x17\n\x07Request\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x17\n\x05Reply\x12\x0e\n\x06length\x18\x01 \x01(\x05\x32\x64\n\nFileServer\x12\x16\n\x08\x66ilename\x12\x03.fs\x1a\x03.fs\"\x00\x12\x1c\n\x06upload\x12\x06.Chunk\x1a\x06.Reply\"\x00(\x01\x12 \n\x08\x64ownload\x12\x08.Request\x1a\x06.Chunk\"\x00\x30\x01\x62\x06proto3'
+  serialized_pb=b'\n\x08\x66s.proto\"\x17\n\x05\x43hunk\x12\x0e\n\x06\x62uffer\x18\x01 \x01(\x0c\"\x10\n\x02\x66s\x12\n\n\x02\x66n\x18\x01 \x01(\t\"\x91\x01\n\x05stats\x12\x0f\n\x07\x63puUtil\x18\x01 \x01(\t\x12\x10\n\x08ramTotal\x18\x02 \x01(\t\x12\x14\n\x0cramAvailable\x18\x03 \x01(\t\x12\x12\n\nramPercent\x18\x04 \x01(\t\x12\x13\n\x0btotalMemory\x18\x05 \x01(\t\x12\x12\n\nusedMemory\x18\x06 \x01(\t\x12\x12\n\nfreeMemory\x18\x07 \x01(\t\"\x17\n\x07Request\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x17\n\x05Reply\x12\x0e\n\x06length\x18\x01 \x01(\x05\"\x07\n\x05\x45MPTY2\x88\x01\n\nFileServer\x12\x16\n\x08\x66ilename\x12\x03.fs\x1a\x03.fs\"\x00\x12\x1c\n\x06upload\x12\x06.Chunk\x1a\x06.Reply\"\x00(\x01\x12 \n\x08\x64ownload\x12\x08.Request\x1a\x06.Chunk\"\x00\x30\x01\x12\"\n\x0egetServerStats\x12\x06.EMPTY\x1a\x06.stats\"\x00\x62\x06proto3'
 )
 
 
@@ -86,6 +86,79 @@ _FS = _descriptor.Descriptor(
 )
 
 
+_STATS = _descriptor.Descriptor(
+  name='stats',
+  full_name='stats',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='cpuUtil', full_name='stats.cpuUtil', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='ramTotal', full_name='stats.ramTotal', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='ramAvailable', full_name='stats.ramAvailable', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='ramPercent', full_name='stats.ramPercent', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='totalMemory', full_name='stats.totalMemory', index=4,
+      number=5, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='usedMemory', full_name='stats.usedMemory', index=5,
+      number=6, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='freeMemory', full_name='stats.freeMemory', index=6,
+      number=7, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=56,
+  serialized_end=201,
+)
+
+
 _REQUEST = _descriptor.Descriptor(
   name='Request',
   full_name='Request',
@@ -112,8 +185,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=55,
-  serialized_end=78,
+  serialized_start=203,
+  serialized_end=226,
 )
 
 
@@ -143,14 +216,40 @@ _REPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=80,
-  serialized_end=103,
+  serialized_start=228,
+  serialized_end=251,
+)
+
+
+_EMPTY = _descriptor.Descriptor(
+  name='EMPTY',
+  full_name='EMPTY',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=253,
+  serialized_end=260,
 )
 
 DESCRIPTOR.message_types_by_name['Chunk'] = _CHUNK
 DESCRIPTOR.message_types_by_name['fs'] = _FS
+DESCRIPTOR.message_types_by_name['stats'] = _STATS
 DESCRIPTOR.message_types_by_name['Request'] = _REQUEST
 DESCRIPTOR.message_types_by_name['Reply'] = _REPLY
+DESCRIPTOR.message_types_by_name['EMPTY'] = _EMPTY
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Chunk = _reflection.GeneratedProtocolMessageType('Chunk', (_message.Message,), {
@@ -167,6 +266,13 @@ fs = _reflection.GeneratedProtocolMessageType('fs', (_message.Message,), {
   })
 _sym_db.RegisterMessage(fs)
 
+stats = _reflection.GeneratedProtocolMessageType('stats', (_message.Message,), {
+  'DESCRIPTOR' : _STATS,
+  '__module__' : 'fs_pb2'
+  # @@protoc_insertion_point(class_scope:stats)
+  })
+_sym_db.RegisterMessage(stats)
+
 Request = _reflection.GeneratedProtocolMessageType('Request', (_message.Message,), {
   'DESCRIPTOR' : _REQUEST,
   '__module__' : 'fs_pb2'
@@ -181,6 +287,13 @@ Reply = _reflection.GeneratedProtocolMessageType('Reply', (_message.Message,), {
   })
 _sym_db.RegisterMessage(Reply)
 
+EMPTY = _reflection.GeneratedProtocolMessageType('EMPTY', (_message.Message,), {
+  'DESCRIPTOR' : _EMPTY,
+  '__module__' : 'fs_pb2'
+  # @@protoc_insertion_point(class_scope:EMPTY)
+  })
+_sym_db.RegisterMessage(EMPTY)
+
 
 
 _FILESERVER = _descriptor.ServiceDescriptor(
@@ -189,8 +302,8 @@ _FILESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=105,
-  serialized_end=205,
+  serialized_start=263,
+  serialized_end=399,
   methods=[
   _descriptor.MethodDescriptor(
     name='filename',
@@ -217,6 +330,15 @@ _FILESERVER = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_REQUEST,
     output_type=_CHUNK,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='getServerStats',
+    full_name='FileServer.getServerStats',
+    index=3,
+    containing_service=None,
+    input_type=_EMPTY,
+    output_type=_STATS,
     serialized_options=None,
   ),
 ])
