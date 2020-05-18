@@ -47,7 +47,7 @@ class FileServer(fs_pb2_grpc.FileServerServicer):
                      context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
             
             def getServerStats(self, request, context):
-                cpu_percent = str(psutil.cpu_percent())
+                cpu_percent = str(psutil.cpu_percent(percpu=False))
                 ram_stats = psutil.virtual_memory()._asdict()
                 ram_total = str(ram_stats['total'])
                 ram_available = str(ram_stats['available'])

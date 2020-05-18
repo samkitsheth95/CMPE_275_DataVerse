@@ -71,11 +71,3 @@ try:
                 print(status)
 except KeyboardInterrupt:
         exit()
-
-    # demo for file downloading:
-    # out_file_name = '/home/samkit/cmpe275/IN/sam'
-    # if os.path.exists(out_file_name):
-    #     os.remove(out_file_name)
-    # client.download('whatever_name', out_file_name)
-    # os.system(f'sha1sum {in_file_name}')
-    # os.system(f'sha1sum {out_file_name}')
