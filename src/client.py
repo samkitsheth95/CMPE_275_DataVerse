@@ -18,7 +18,6 @@ class client:
     def sendfile(self, in_file_name,fn):
         try:
             responseq = self.stub.filename(fs_pb2.fs(fn=fn))
-            print(responseq)
             chunks_generator = helpers.get_file_chunks(in_file_name)
             response = self.stub.upload(chunks_generator)
             assert response.length == os.path.getsize(in_file_name)
@@ -32,14 +31,12 @@ class client:
             helpers.save_chunks_to_file(response, out_file_name)  
             return True
         except grpc.RpcError as e:
-            print(e.details())
             return False
     def getServerStats(self):
         try:
             response = self.stub.getServerStats(fs_pb2.EMPTY())
             return response
         except grpc.RpcError as e:
-            print(e.details())
             return "Server is down"
 try:
     while True:
@@ -53,9 +50,9 @@ try:
             in_file_name = input("Enter FilePath ")
             fn = in_file_name.rsplit('/',1)[1]
             serversList = load_balancer(conn)
-            print(fn)
             for connection in serversList:
                 connection[1].sendfile(in_file_name,fn)
+            print("File Saved on server")
         elif option=="2":
             searchfile = input("Enter FileSearch ")
             check=True
